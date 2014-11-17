@@ -18,9 +18,9 @@
     "mocha": "^2.0.1"
   },
   "dependencies": {
+    "connect": "^3.3.3",
     "graft": "^0.3.1",
     "hyperquest": "^1.0.1",
-    "through2": "^0.6.3",
-    "utils-merge": "^1.0.0"
+    "through2": "^0.6.3"
   }
 }
