@@ -18,6 +18,7 @@
     "mocha": "^2.0.1"
   },
   "dependencies": {
+    "body-parser": "^1.9.2",
     "connect": "^3.3.3",
     "graft": "^0.3.1",
     "hyperquest": "^1.0.1",

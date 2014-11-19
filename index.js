@@ -3,28 +3,34 @@
 var graft   = require('graft');
 var http    = require('http');
 var url     = require('url');
+var request = require('./lib/request');
 
 function httpServer() {
   function handler(req, res, next) {
-    handler.write({
-      method: req.method,
-      path: url.parse(req.url).pathname,
-      url: req.url,
-      req: req,
-      res: res
-    });
+    handler.handle(req, res, next);
   }
 
   handler.graft = graft();
 
-  handler.pipe = function() {
-    this.graft.pipe.apply(this.graft, arguments);
-    return this;
+  handler.use = function() {
+    return this.graft.pipe.apply(this.graft, arguments);
   }
 
-  handler.write = function() {
-    this.graft.write.apply(this.graft, arguments);
-    return this;
+  handler.handle = function(req, res, next) {
+    var msg = request.toMessage(req);
+    msg.res = this.graft.ReadChannel();
+
+    msg.res.on('data', function(msg) {
+      res.writeHead(msg.statusCode, msg.headers);
+      if (typeof msg.body.pipe == 'function') {
+        msg.body.pipe(res);
+      } else {
+        res.end(msg.body);
+      }
+      if (next) next();
+    });
+
+    this.graft.write(msg);
   }
 
   // provide listen as a convenience function
