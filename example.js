@@ -39,9 +39,9 @@ graftHttp
 
 http.createServer(graftHttp).listen(3000);
 // or
-// server.listen(3000);
+// graftHttp.listen(3000);
 // or
-// connect.use(server);
+// connect.use(graftHttp);
 
 
 var clientRequest = http.request({
