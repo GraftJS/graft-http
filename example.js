@@ -11,14 +11,19 @@ var bodyParser = require('body-parser');
 // server
 var graftHttp = graftHttp();
 
-// using a connect compatible middleware
-// will parse body into object if request is application/json
-graftHttp.use(graftMiddleware(bodyParser.json()))
+graftHttp
+  .use(require('./lib/router')('/post/:id'))
+  // using a connect compatible middleware
+  // will parse body into object if request is application/json
+  .pipe(graftMiddleware(bodyParser.json()))
   // echo micro service to pass through json data
   .pipe(through.obj(function(req, enc, done) {
 
+    // route params
+    console.log("requested id: ", req.params.id);
+
     // js object
-    console.log(req.body);
+    console.log("request body: ", req.body);
 
     req.res.end({
       statusCode: 200,
@@ -43,6 +48,7 @@ var clientRequest = http.request({
   hostname: 'localhost',
   port: 3000,
   method: 'POST',
+  path: '/post/15',
   headers: {
     'Content-Type': 'application/json',
   }
