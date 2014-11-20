@@ -12,7 +12,7 @@ function httpServer() {
 
   handler.graft = graft();
 
-  handler.use = function() {
+  handler.pipe = function() {
     return this.graft.pipe.apply(this.graft, arguments);
   }
 

@@ -5,19 +5,21 @@ var graftHttp = require('./');
 var http      = require('http');
 var through   = require('through2');
 
-var graftMiddleware = require('./lib/middleware');
+var middleware = require('./lib/middleware');
 var bodyParser = require('body-parser');
 
-// server
-var graftHttp = graftHttp();
+var server = graftHttp();
+var router = require('./lib/router')();
 
-graftHttp
-  .use(require('./lib/router')('/post/:id'))
+server
   // using a connect compatible middleware
   // will parse body into object if request is application/json
-  .pipe(graftMiddleware(bodyParser.json()))
-  // echo micro service to pass through json data
-  .pipe(through.obj(function(req, enc, done) {
+  .pipe(middleware(bodyParser.json()))
+  // simple router for routing micro services
+  .pipe(router)
+
+// echo micro service to pass through json data
+router.route('/post/:id', through.obj(function(req, enc, done) {
 
     // route params
     console.log("requested id: ", req.params.id);
@@ -31,17 +33,17 @@ graftHttp
         'Content-Type': "application/json"
       },
       body: JSON.stringify(req.body)
-    })
+    });
 
     done();
 
-  }));
+}));
 
-http.createServer(graftHttp).listen(3000);
+http.createServer(server).listen(3000);
 // or
-// graftHttp.listen(3000);
+// server.listen(3000);
 // or
-// connect.use(graftHttp);
+// connect.use(server);
 
 
 var clientRequest = http.request({
