@@ -1,0 +1,28 @@
+{
+  "name": "graft-http",
+  "scripts": {
+    "jshint": "jshint --exclude-path .gitignore .",
+    "test": "mocha -R spec 2>&1"
+  },
+  "pre-commit": [
+    "jshint",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraftJS/graft-http.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jshint": "^2.5.10",
+    "mocha": "^2.0.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "connect": "^3.3.3",
+    "graft": "^0.3.1",
+    "hyperquest": "^1.0.1",
+    "path-match": "^1.2.2",
+    "through2": "^0.6.3"
+  }
+}
